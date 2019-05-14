@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private TextView theDate;
+    private TextView theTextEvent;
     private CalendarView mCalendarView;
 
 
@@ -72,20 +73,27 @@ public class MainActivity extends AppCompatActivity {
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 String date = dayOfMonth + "/" + (month + 1) + "/" + year;
 
-                Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                intent.putExtra("date", date);
-                startActivity(intent);
+                //Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                //intent.putExtra("date", date);
+                //startActivity(intent);
+
+                theDate = (TextView) findViewById(R.id.date);
+                //Intent incomingIntent = getIntent();
+                //String date = incomingIntent.getStringExtra("date");
+                theDate.setText(date);
+
             }
         });
 
         theDate = (TextView) findViewById(R.id.date);
-
-
         Intent incomingIntent = getIntent();
         String date = incomingIntent.getStringExtra("date");
         theDate.setText(date);
 
-
+        theTextEvent = (TextView) findViewById(R.id.textEvent);
+        Intent incomingTextEvent = getIntent();
+        String event = incomingTextEvent.getStringExtra("event");
+        theTextEvent.setText(event);
     }
 
 

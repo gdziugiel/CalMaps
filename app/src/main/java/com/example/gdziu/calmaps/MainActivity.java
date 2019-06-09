@@ -42,26 +42,34 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import com.google.api.client.json.gson.GsonFactory;
 public class MainActivity extends AppCompatActivity {
-
+    public int modyfi_id;
+    private ArrayList<String> target;
+    public SimpleCursorAdapter adapter;
+    MySQLite db = new MySQLite(this);
     private static final String TAG = "MainActivity";
     private TextView theDate;
-    private TextView theTextEvent;
     private CalendarView mCalendarView;
+    private String date;
     com.google.api.services.calendar.Calendar mService;
 
     GoogleAccountCredential credential;
@@ -86,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         activityLayout.setLayoutParams(lp);
         activityLayout.setOrientation(LinearLayout.VERTICAL);
         activityLayout.setPadding(16, 16, 16, 16);
-
         ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -118,34 +125,74 @@ public class MainActivity extends AppCompatActivity {
                 .setApplicationName("Google Calendar API Android Quickstart")
                 .build();
         setContentView(R.layout.activity_main);
-
+        theDate = (TextView) findViewById(R.id.date);
         mCalendarView = (CalendarView) findViewById(R.id.calendarView2);
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-
+                String sDayOfMonth;
+                if(dayOfMonth < 10) {
+                    sDayOfMonth = "0" + dayOfMonth;
+                }
+                else {
+                    sDayOfMonth = String.valueOf(dayOfMonth);
+                }
+                if(dayOfMonth < 10) {
+                    sDayOfMonth = "0" + dayOfMonth;
+                }
+                String sMonth;
+                if(month + 1 < 10) {
+                    sMonth = "0" + (month + 1);
+                }
+                else {
+                    sMonth = String.valueOf(month + 1);
+                }
+                date = year + "-" + sMonth + "-" + sDayOfMonth;
                 //Intent intent = new Intent(MainActivity.this, MainActivity.class);
                 //intent.putExtra("date", date);
                 //startActivity(intent);
-
-                theDate = (TextView) findViewById(R.id.date);
                 //Intent incomingIntent = getIntent();
                 //String date = incomingIntent.getStringExtra("date");
+                //theDate.setText(date);
+                //refreshResults();
                 theDate.setText(date);
-
+                adapter.changeCursor(db.lista(date));
+                adapter.notifyDataSetChanged();
             }
         });
+        if(date == null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDate = sdf.format(new Date());
+            theDate.setText(currentDate);
+            date = currentDate;
+        }
 
-        theDate = (TextView) findViewById(R.id.date);
-        Intent incomingIntent = getIntent();
-        String date = incomingIntent.getStringExtra("date");
-        theDate.setText(date);
 
-        theTextEvent = (TextView) findViewById(R.id.textEvent);
-        Intent incomingTextEvent = getIntent();
-        String event = incomingTextEvent.getStringExtra("event");
-        theTextEvent.setText(event);
+        this.adapter = new SimpleCursorAdapter(
+                this,
+                android.R.layout.simple_list_item_2,
+                db.lista(date),
+                new String[] {"_id", "summary"},
+                new int[] { android.R.id.text1,
+                        android.R.id.text2},
+
+                SimpleCursorAdapter.IGNORE_ITEM_VIEW_TYPE
+        );
+        ListView listView = (ListView) findViewById(
+                R.id.listView );
+        listView.setAdapter(this.adapter);
+        listView.setOnItemLongClickListener(new
+                                                    AdapterView.OnItemLongClickListener() {
+                                                        @Override
+                                                        public boolean onItemLongClick(AdapterView<?> parent, View
+                                                                view, int position, long id) {
+                                                            TextView name = (TextView)view.findViewById(android.R.id.text1);
+                                                            db.usun(name.getText().toString());
+                                                            adapter.changeCursor(db.lista(date));
+                                                            adapter.notifyDataSetChanged();
+                                                            return true;
+                                                        }
+                                                    });
     }
 
 
@@ -156,9 +203,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void calendarApi(MenuItem mi) {
-        Intent intent1 = new Intent(this, CalendarApiActivity.class);
-        startActivityForResult(intent1, 1);
+    public void odswiez(MenuItem mi) {
+        if (isGooglePlayServicesAvailable()) {
+            refreshResults();
+        } else {
+            mStatusText.setText("Google Play Services required: " +
+                    "after installing, close and relaunch this app.");
+        }
     }
 
     public void addEvent(MenuItem mi) {
@@ -278,7 +329,6 @@ public class MainActivity extends AppCompatActivity {
                     mStatusText.setText("Data retrieved using" +
                             " the Google Calendar API:");
                     mResultsText.setText(TextUtils.join("\n\n", dataStrings));
-                    theTextEvent.setText(TextUtils.join("\n\n", dataStrings));
                 }
             }
         });

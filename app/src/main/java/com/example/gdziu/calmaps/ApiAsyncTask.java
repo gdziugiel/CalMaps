@@ -1,6 +1,11 @@
 package com.example.gdziu.calmaps;
 
 import android.os.AsyncTask;
+import android.widget.CalendarView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.util.DateTime;
@@ -8,8 +13,11 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.*;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * An asynchronous task that handles the Google Calendar API call.
@@ -22,7 +30,6 @@ import java.util.List;
 
 public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
     private MainActivity mActivity;
-
     /**
      * Constructor.
      * @param activity MainActivity that spawned this task.
@@ -65,11 +72,11 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
     private List<String> getDataFromApi() throws IOException {
         // List the next 10 events from the primary calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
+
+
+        //String s = mActivity.theDate.getText().toString();
         List<String> eventStrings = new ArrayList<String>();
         Events events = mActivity.mService.events().list("primary")
-                .setMaxResults(10)
-                .setTimeMin(now)
-                .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();
         List<Event> items = events.getItems();
@@ -81,10 +88,23 @@ public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
                 // the start date.
                 start = event.getStart().getDate();
             }
+            Wydarzenie wydarzenie = new Wydarzenie(
+                    String.format("%s", event.getSummary()),
+                    String.format("%s", event.getLocation()),
+                    String.format("%s", start)
+            );
+            mActivity.modyfi_id = 0;
+            wydarzenie.setId(mActivity.modyfi_id);
+            mActivity.db.dodaj(wydarzenie);
+
+
             eventStrings.add(
                     String.format("%s; %s; %s", event.getSummary(), event.getLocation(), start));
         }
         return eventStrings;
     }
+    @Override
+    protected void onPostExecute(Void result) {
 
+    }
 }

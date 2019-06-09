@@ -4,8 +4,8 @@
 
     <item
         android:id="@+id/calendarapi"
-        android:title="Calendar Api"
-        android:onClick="calendarApi"
+        android:title="Odśwież"
+        android:onClick="odswiez"
         android:icon="@android:drawable/ic_menu_add"
         app:showAsAction="always"
         />

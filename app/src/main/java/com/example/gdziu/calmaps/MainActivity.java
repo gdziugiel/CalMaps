@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,13 +166,20 @@ public class MainActivity extends AppCompatActivity {
             theDate.setText(currentDate);
             date = currentDate;
         }
-
-
+        Intent incomingIntent = getIntent();
+        String summary = incomingIntent.getStringExtra("summary");
+        if(summary != null) {
+            Toast.makeText(this, summary, Toast.LENGTH_SHORT).show();
+            String location = incomingIntent.getStringExtra("location");
+            String startDate = incomingIntent.getStringExtra("startDate");
+            addCalendarEvent(summary, location, startDate);
+            refreshResults();
+        }
         this.adapter = new SimpleCursorAdapter(
                 this,
                 android.R.layout.simple_list_item_2,
                 db.lista(date),
-                new String[] {"_id", "summary"},
+                new String[] {"summary", "location"},
                 new int[] { android.R.id.text1,
                         android.R.id.text2},
 
@@ -406,7 +413,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+    public void addCalendarEvent(String summary, String location, String startDate) {
+        new CreateEventTask(mService, summary, location, startDate).execute();
+    }
 
 
 

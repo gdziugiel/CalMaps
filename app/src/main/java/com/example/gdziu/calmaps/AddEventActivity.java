@@ -17,14 +17,20 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     public void sendMessage(View view) {
-        EditText kontrolka = (EditText)findViewById(R.id.edit_event_name);
-        String pole = kontrolka.getText().toString();
+        EditText name = (EditText) findViewById(R.id.edit_event_name);
+        EditText place = (EditText) findViewById(R.id.edit_event_place);
+        EditText date = (EditText) findViewById(R.id.edit_event_date);
+        String summary = name.getText().toString();
+        String location = place.getText().toString();
+        String startDate = date.getText().toString();
         //Intent intencja = new Intent();
         //intencja.putExtra("wpis", pole);
         Intent intent = new Intent(AddEventActivity.this, MainActivity.class);
-        intent.putExtra("event", pole);
+        intent.putExtra("summary", summary);
+        intent.putExtra("location", location);
+        intent.putExtra("startDate", startDate);
         startActivity(intent);
         //setResult(RESULT_OK, intencja); finish();
-        Toast.makeText(this, pole, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, pole, Toast.LENGTH_SHORT).show();
     }
 }

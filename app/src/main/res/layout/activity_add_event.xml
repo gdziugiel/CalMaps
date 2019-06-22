@@ -74,7 +74,26 @@
                 android:layout_height="38dp"
                 android:layout_marginBottom="20dp"
                 android:singleLine="true"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:focusable="false"/>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="3dp"
+                android:text="@string/event_time"
+                android:textAllCaps="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/edit_event_time"
+                android:layout_width="fill_parent"
+                android:layout_height="38dp"
+                android:layout_marginBottom="20dp"
+                android:singleLine="true"
+                android:textSize="14sp"
+                android:focusable="false"/>
 
             <Button
                 android:id="@+id/add_event"

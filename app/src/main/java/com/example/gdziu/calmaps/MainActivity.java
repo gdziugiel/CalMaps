@@ -137,9 +137,6 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     sDayOfMonth = String.valueOf(dayOfMonth);
                 }
-                if(dayOfMonth < 10) {
-                    sDayOfMonth = "0" + dayOfMonth;
-                }
                 String sMonth;
                 if(month + 1 < 10) {
                     sMonth = "0" + (month + 1);

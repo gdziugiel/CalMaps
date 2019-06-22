@@ -3,6 +3,7 @@
     <string name="event_name">Wpisz tytuł</string>
     <string name="event_place">Lokalizacja</string>
     <string name="event_date">Data</string>
+    <string name="event_time">Godzina</string>
     <string name="add_event">Zapisz</string>
     <string name="appbar_scrolling_view_behavior"></string>
 </resources>

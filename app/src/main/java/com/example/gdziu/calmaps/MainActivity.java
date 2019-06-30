@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 this,
                 android.R.layout.simple_list_item_2,
                 db.lista(date),
-                new String[] {"summary", "location"},
+                new String[] {"summary", "_id"},
                 new int[] { android.R.id.text1,
                         android.R.id.text2},
 
@@ -185,6 +185,24 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(
                 R.id.listView );
         listView.setAdapter(this.adapter);
+        listView.setOnItemClickListener(new
+                                                AdapterView.OnItemClickListener()
+                                                {
+                                                    @Override
+                                                    public void onItemClick(AdapterView<?>
+                                                                                    adapter, View view, int pos, long id)
+                                                    {
+                                                        TextView summary = (TextView)
+                                                                view.findViewById(android.R.id.text2);
+                                                        Wydarzenie wydarzenie = db.pobierz(Integer.parseInt
+                                                                (summary.getText().toString()));
+                                                        Intent intencja = new
+                                                                Intent(getApplicationContext(),
+                                                                Widok.class);
+                                                        intencja.putExtra("element", wydarzenie);
+                                                        startActivityForResult(intencja, 2);
+                                                    }
+                                                });
         listView.setOnItemLongClickListener(new
                                                     AdapterView.OnItemLongClickListener() {
                                                         @Override

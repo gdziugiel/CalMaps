@@ -12,21 +12,28 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import java.util.Calendar;
 
 public class AddEventActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnDatePicker, btnTimePicker;
     EditText txtDate, txtTime;
+    EditText txtLocation;
     private int mYear, mMonth, mDay, mHour, mMinute;
+    int PLACE_PICKER_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
         txtDate=(EditText)findViewById(R.id.edit_event_date);
         txtTime=(EditText)findViewById(R.id.edit_event_time);
-
+        txtLocation=(EditText)findViewById(R.id.edit_event_place);
         txtDate.setOnClickListener(this);
         txtTime.setOnClickListener(this);
+        txtLocation.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
@@ -99,6 +106,17 @@ public class AddEventActivity extends AppCompatActivity implements View.OnClickL
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         }
+        if (v == txtLocation) {
+
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            try {
+                startActivityForResult(builder.build(AddEventActivity.this), PLACE_PICKER_REQUEST);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
+        }
     }
     public void sendMessage(View view) {
         EditText name = (EditText) findViewById(R.id.edit_event_name);
@@ -117,5 +135,21 @@ public class AddEventActivity extends AppCompatActivity implements View.OnClickL
         startActivity(intent);
         //setResult(RESULT_OK, intencja); finish();
         //Toast.makeText(this, startDate, Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                StringBuilder stringBuilder = new StringBuilder();
+                String latitude = String.valueOf(place.getLatLng().latitude);
+                String longitude = String.valueOf(place.getLatLng().longitude);
+                stringBuilder.append("LATITUDE: ");
+                stringBuilder.append(latitude);
+                stringBuilder.append("LONGITUDE: ");
+                stringBuilder.append(longitude);
+                txtLocation.setText(stringBuilder.toString());
+            }
+        }
     }
 }

@@ -1,3 +1,6 @@
+/**
+ * \file MainActivity.java
+ */
 package com.example.gdziu.calmaps;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -61,6 +64,11 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import com.google.api.client.json.gson.GsonFactory;
+
+
+/** Klasa odpowiedzialna za widok kalendarza.
+ *
+ */
 public class MainActivity extends AppCompatActivity {
     public int modyfi_id;
     private ArrayList<String> target;
@@ -84,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = { CalendarScopes.CALENDAR };
 
+    /** \brief Metoda tworząca activity.
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
         theDate = (TextView) findViewById(R.id.date);
         mCalendarView = (CalendarView) findViewById(R.id.calendarView2);
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+
+            /*
+             * \fn
+             * Metoda onSelectedDayChange().
+             */
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
                 String sDayOfMonth;
@@ -185,38 +202,30 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(
                 R.id.listView );
         listView.setAdapter(this.adapter);
-        listView.setOnItemClickListener(new
-                                                AdapterView.OnItemClickListener()
-                                                {
-                                                    @Override
-                                                    public void onItemClick(AdapterView<?>
-                                                                                    adapter, View view, int pos, long id)
-                                                    {
-                                                        TextView summary = (TextView)
-                                                                view.findViewById(android.R.id.text2);
-                                                        Wydarzenie wydarzenie = db.pobierz(Integer.parseInt
-                                                                (summary.getText().toString()));
-                                                        Intent intencja = new
-                                                                Intent(getApplicationContext(),
-                                                                Widok.class);
-                                                        intencja.putExtra("element", wydarzenie);
-                                                        startActivityForResult(intencja, 2);
-                                                    }
-                                                });
-        listView.setOnItemLongClickListener(new
-                                                    AdapterView.OnItemLongClickListener() {
-                                                        @Override
-                                                        public boolean onItemLongClick(AdapterView<?> parent, View
-                                                                view, int position, long id) {
-                                                            TextView name = (TextView)view.findViewById(android.R.id.text1);
-                                                            db.usun(name.getText().toString());
-                                                            adapter.changeCursor(db.lista(date));
-                                                            adapter.notifyDataSetChanged();
-                                                            return true;
-                                                        }
-                                                    });
-    }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int pos, long id)
+            {
+                TextView summary = (TextView) view.findViewById(android.R.id.text2);
+                Wydarzenie wydarzenie = db.pobierz(Integer.parseInt(summary.getText().toString()));
+                Intent intencja = new Intent(getApplicationContext(), Widok.class);
+                intencja.putExtra("element", wydarzenie);
+                startActivityForResult(intencja, 2);
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView name = (TextView)view.findViewById(android.R.id.text1);
+                db.usun(name.getText().toString());
+                adapter.changeCursor(db.lista(date));
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -225,6 +234,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /** \brief Metoda wymuszająca ponowne wczytanie danych z API kalendarza
+     *
+     */
     public void odswiez(MenuItem mi) {
         if (isGooglePlayServicesAvailable()) {
             refreshResults();
@@ -234,10 +246,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** \brief Metoda uruchami activity dodające wydarzenie
+     *
+     */
     public void addEvent(MenuItem mi) {
         Intent intent1 = new Intent(this, AddEventActivity.class);
         startActivityForResult(intent1, 1);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -250,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     *
      * Called when an activity launched here (specifically, AccountPicker
      * and authorization) exits, giving you the requestCode you started it with,
      * the resultCode it returned, and any additional data from it.
@@ -258,6 +275,10 @@ public class MainActivity extends AppCompatActivity {
      *     activity result.
      * @param data Intent (containing result data) returned by incoming
      *     activity result.
+     */
+
+    /** \brief Metoda wykonująca się w momencie zakończenia działania AccountPickera, zwraca kod zapytania, kod wyniku oraz ewentualne dane dodatkowe
+     *
      */
     @Override
     protected void onActivityResult(
@@ -306,6 +327,10 @@ public class MainActivity extends AppCompatActivity {
      * email address isn't known yet, then call chooseAccount() method so the
      * user can pick an account.
      */
+
+    /** \brief Metoda próbująca pobrać dane z Google Calendar API, jeżeli konto nie jest wybrane, uruchamiana jest metoda chooseAccount().
+     *
+     */
     private void refreshResults() {
         if (credential.getSelectedAccountName() == null) {
             chooseAccount();
@@ -318,11 +343,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Clear any existing Google Calendar API data from the TextView and update
-     * the header message; called from background threads and async tasks
-     * that need to update the UI (in the UI thread).
-     */
+
     public void clearResultsText() {
         runOnUiThread(new Runnable() {
             @Override
@@ -333,12 +354,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Fill the data TextView with the given List of Strings; called from
-     * background threads and async tasks that need to update the UI (in the
-     * UI thread).
-     * @param dataStrings a List of Strings to populate the main TextView with.
-     */
+
     public void updateResultsText(final List<String> dataStrings) {
         runOnUiThread(new Runnable() {
             @Override
@@ -356,11 +372,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Show a status message in the list header TextView; called from background
-     * threads and async tasks that need to update the UI (in the UI thread).
-     * @param message a String to display in the UI header TextView.
-     */
+
     public void updateStatus(final String message) {
         runOnUiThread(new Runnable() {
             @Override
@@ -374,6 +386,10 @@ public class MainActivity extends AppCompatActivity {
      * Starts an activity in Google Play Services so the user can pick an
      * account.
      */
+
+    /** \brief Metoda rozpoczyna Activity w Google Play Services, pozwalając użytkownikowi wybrać konto
+     *
+     */
     private void chooseAccount() {
         startActivityForResult(
                 credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
@@ -382,6 +398,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Checks whether the device currently has a network connection.
      * @return true if the device has a network connection, false otherwise.
+     */
+
+    /** \brief Metoda odpowiadająca za sprawdzenie połączenia z internetem.
+     *
      */
     private boolean isDeviceOnline() {
         ConnectivityManager connMgr =
@@ -397,6 +417,10 @@ public class MainActivity extends AppCompatActivity {
      * @return true if Google Play Services is available and up to
      *     date on this device; false otherwise.
      */
+
+    /** \brief Metoda odpowiadająca za sprawdzenie statusu Google Play services APK.
+     *
+     */
     private boolean isGooglePlayServicesAvailable() {
         final int connectionStatusCode =
                 GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
@@ -409,12 +433,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Display an error dialog showing that Google Play Services is missing
-     * or out of date.
-     * @param connectionStatusCode code describing the presence (or lack of)
-     *     Google Play Services on this device.
-     */
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
         runOnUiThread(new Runnable() {
@@ -428,6 +446,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    /** \brief Metoda dodająca wydarzenie do kalendarza.
+     *
+     */
     public void addCalendarEvent(String summary, String location, String startDate) {
         new CreateEventTask(mService, summary, location, startDate).execute();
     }

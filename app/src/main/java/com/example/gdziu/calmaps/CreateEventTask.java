@@ -1,3 +1,6 @@
+/**
+ * \file CreateEventTask.java
+ */
 package com.example.gdziu.calmaps;
 import android.os.AsyncTask;
 
@@ -16,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/** Klasa odpowiedzialna za asynchroniczne dodanie wydarzenia do API Kalendarza.
+ *
+ */
 public class CreateEventTask extends AsyncTask<Void, Void, Void> {
     Calendar mService;
     String summary;

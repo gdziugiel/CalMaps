@@ -1,3 +1,6 @@
+/**
+ * \file ApiAsyncTask.java
+ */
 package com.example.gdziu.calmaps;
 
 import android.os.AsyncTask;
@@ -28,6 +31,9 @@ import java.util.TimeZone;
  * Created by miguel on 5/29/15.
  */
 
+/** Klasa odpowiedzialna za asynchroniczny odczyt danych z api kalendarza.
+ *
+ */
 public class ApiAsyncTask extends AsyncTask<Void, Void, Void> {
     private MainActivity mActivity;
     /**

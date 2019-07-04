@@ -1,7 +1,13 @@
+/**
+ * \file Wydarzenie.java
+ */
 package com.example.gdziu.calmaps;
 
 import java.io.Serializable;
 
+/** Klasa zawierająca szczegóły wydarzzenia - tytuł, lokalizacja, czas rozpoczęcia.
+ *
+ */
 public class Wydarzenie implements Serializable {
     private int _id;
     private String summary;

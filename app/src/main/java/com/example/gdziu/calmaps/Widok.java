@@ -1,3 +1,6 @@
+/**
+ * \file Widok.java
+ */
 package com.example.gdziu.calmaps;
 
 import android.content.Intent;
@@ -6,6 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+/** Klasa odpowiedzialna za wyświetlanie szczegółowego widoku wydarzenia.
+ *
+ */
 public class Widok extends AppCompatActivity {
 
     @Override

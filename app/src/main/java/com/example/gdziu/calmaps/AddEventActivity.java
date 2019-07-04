@@ -1,3 +1,6 @@
+/**
+ * \file AddEventActivity.java
+ */
 package com.example.gdziu.calmaps;
 
 import android.app.DatePickerDialog;
@@ -18,12 +21,19 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import java.util.Calendar;
 
+/** brief Klasa odpowiedzialna za formularz dodania wydarzenia.
+ *
+ */
 public class AddEventActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnDatePicker, btnTimePicker;
     EditText txtDate, txtTime;
     EditText txtLocation;
     private int mYear, mMonth, mDay, mHour, mMinute;
     int PLACE_PICKER_REQUEST = 1;
+
+    /** \brief Metoda tworząca activity.
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +45,10 @@ public class AddEventActivity extends AppCompatActivity implements View.OnClickL
         txtTime.setOnClickListener(this);
         txtLocation.setOnClickListener(this);
     }
+
+    /** \brief Metoda uruchamiająca pickery.
+     *
+     */
     @Override
     public void onClick(View v) {
 
@@ -118,6 +132,10 @@ public class AddEventActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     }
+
+    /** \brief Metoda wysyłająca dane z formularza do MainActivity.
+     *
+     */
     public void sendMessage(View view) {
         EditText name = (EditText) findViewById(R.id.edit_event_name);
         EditText place = (EditText) findViewById(R.id.edit_event_place);
@@ -136,6 +154,10 @@ public class AddEventActivity extends AppCompatActivity implements View.OnClickL
         //setResult(RESULT_OK, intencja); finish();
         //Toast.makeText(this, startDate, Toast.LENGTH_SHORT).show();
     }
+
+    /** \brief Metoda odbierająca dane z place pickera.
+     *
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == PLACE_PICKER_REQUEST) {

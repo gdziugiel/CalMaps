@@ -1,3 +1,6 @@
+/**
+ * \file CalendarApiActivity.java
+ */
 package com.example.gdziu.calmaps;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -46,6 +49,9 @@ import java.util.List;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+/** Klasa odpowiedzialna za połączenie z Calendar API od Google oraz zarządzanie nim.
+ *
+ */
 public class CalendarApiActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
     GoogleAccountCredential mCredential;

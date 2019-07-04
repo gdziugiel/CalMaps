@@ -1,3 +1,6 @@
+/**
+ * \file MySQLite.java
+ */
 package com.example.gdziu.calmaps;
 
 import android.content.ContentValues;
@@ -6,6 +9,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/** Klasa odpowiedzialna za połączenie z bazą danych, tj. dodanie, usunięcie, edycja wydarzenia oraz pobranie rekordu przez ID.
+ *
+ */
 public class MySQLite extends SQLiteOpenHelper {
     private static final int
             DATABASE_VERSION = 1;
@@ -13,6 +19,10 @@ public class MySQLite extends SQLiteOpenHelper {
         super(context, "wydarzeniaDB",
                 null, DATABASE_VERSION);
     }
+
+    /** \brief Metoda tworząca w bazie tabele.
+     *
+     */
     @Override
     public void onCreate(SQLiteDatabase
                                  database) {
@@ -25,12 +35,19 @@ public class MySQLite extends SQLiteOpenHelper {
         database.execSQL(DATABASE_CREATE);
     }
 
+    /** \brief Metoda aktualizująca bazę danych.
+     *
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db,
                           int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS wydarzenia");
         onCreate(db);
     }
+
+    /** \brief Metoda odpowiedzialna za dodanie wydarzenia do bazy
+     *
+     */
     public void dodaj(Wydarzenie wydarzenie){
 
         SQLiteDatabase db =
@@ -57,6 +74,10 @@ public class MySQLite extends SQLiteOpenHelper {
         }
         db.close();
     }
+
+    /** \brief Metoda odpowiedzialna za usunięcie wydarzenia z bazy
+     *
+     */
     public void usun(String id) {
         SQLiteDatabase db =
                 this.getWritableDatabase();
@@ -79,6 +100,10 @@ public class MySQLite extends SQLiteOpenHelper {
 
         return i;
     }
+
+    /** \brief Metoda odpowiedzialna za pobranie wydarzenia z bazy
+     *
+     */
     public Wydarzenie pobierz(int id){
 
         SQLiteDatabase db =
@@ -109,6 +134,10 @@ public class MySQLite extends SQLiteOpenHelper {
 
         return wydarzenie;
     }
+
+    /** \brief Metoda odpowiedzialna za pobranie listy wydarzedń z bazy
+     *
+     */
     public Cursor lista(String warunek){
         String warunekStart = warunek + "T00:00:00.000+02:00";
         String warunekEnd = warunek + "T23:59:59.000+02:00";
